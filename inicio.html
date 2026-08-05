@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Entrenamiento de Tiro Cinegético</title>
+
+        <style>
+            body {
+                margin: 0;
+                background: #111;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                font-family: Arial, sans-serif;
+            }
+
+            #contenedor {
+                position: relative;
+                max-width: 900px;
+                width: 95%;
+            }
+
+            #contenedor img {
+                width: 100%;
+                display: block;
+                border-radius: 12px;
+            }
+
+            #btnComenzar {
+                position: absolute;
+
+                left: 50%;
+                bottom: 80px;
+
+                transform: translateX(-50%);
+
+                background: #ff6a00;
+                color: white;
+
+                border: none;
+
+                border-radius: 12px;
+
+                padding: 15px 36px;
+
+                font-size: 24px;
+
+                font-weight: bold;
+
+                cursor: pointer;
+
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+            }
+
+            #btnComenzar:hover {
+                transform: translateX(-50%) scale(1.03);
+            }
+
+            /* ============================= */
+            /* AJUSTE PARA MÓVILES           */
+            /* ============================= */
+
+            @media (max-width: 700px) {
+                #btnComenzar {
+                    left: 65%;
+                    bottom: 55px;
+
+                    padding: 8px 18px;
+
+                    font-size: 15px;
+
+                    border-radius: 10px;
+                }
+            }
+            #btnComenzar:hover {
+                transform: translateX(-50%) scale(1.03);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="contenedor">
+            <img src="Portada.png" />
+
+            <button id="btnComenzar">Comenzar entrenamiento</button>
+        </div>
+
+        <script>
+            document.getElementById('btnComenzar').onclick = function () {
+                window.location = 'index.html';
+            };
+        </script>
+    </body>
+</html>

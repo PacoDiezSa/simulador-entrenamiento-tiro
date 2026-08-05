@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simulador</title>
+
+    <link rel="stylesheet" href="css/estilos.css" />
+    <link rel="stylesheet" href="css/simulador.css" />
+  </head>
+
+  <body>
+    <div
+      id="datosFijos"
+      style="
+        position: fixed;
+        top: 2px;
+        right: 5px;
+        background: rgba(0, 0, 0, 0.65);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        text-align: left;
+        line-height: 1.1;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      "
+    >
+      <div
+        id="cabeceraDatos"
+        onclick="
+          const p = document.getElementById('datosFijos');
+          p.classList.toggle('abierto');
+          this.innerHTML = p.classList.contains('abierto')
+            ? '▼ 📋 Datos'
+            : '▶ 📋 Datos';
+        "
+        style="cursor: pointer; font-weight: bold"
+      >
+        ▶ 📋 Datos
+      </div>
+
+      <div id="contenidoDatos">
+        <table style="width: 100%; border-collapse: collapse">
+          <tr>
+            <td style="color: #d0d0d0">Distancia</td>
+            <td style="text-align: right; font-weight: bold">
+              <span id="txtDistancia">0</span> m
+            </td>
+          </tr>
+
+          <tr>
+            <td style="color: #d0d0d0">Adelanto</td>
+            <td style="text-align: right; font-weight: bold">
+              <span id="txtAdelanto">0</span> cm
+            </td>
+          </tr>
+
+          <tr>
+            <td style="color: #d0d0d0">Corrección</td>
+            <td style="text-align: right; font-weight: bold">
+              <span id="txtCorreccion">0</span> cm
+            </td>
+          </tr>
+        </table>
+
+        <hr style="margin: 4px 0; border: 0; border-top: 1px solid #777" />
+
+        <strong>Entrenamiento</strong><br />
+
+        Disparos:
+        <span id="txtDisparos">0</span><br />
+
+        Aciertos:
+        <span id="txtAciertos">0</span><br />
+
+        Adelantos:
+        <span id="txtAdelantos">0</span><br />
+
+        Atrasos:
+        <span id="txtAtrasos">0</span><br />
+
+        Precisión:
+        <span id="txtPrecision">0%</span><br />
+      </div>
+    </div>
+
+    <div
+      id="infoVelocidad"
+      style="
+        text-align: center;
+        font-size: 16px;
+        margin: 2px 0;
+        line-height: 1.2;
+      "
+    ></div>
+    <link rel="stylesheet" href="css/estilos.css" />
+    <link rel="stylesheet" href="css/simulador.css" />
+  </body>
+  <div id="barraSuperior">
+    <button onclick="toggleSlow()">🐢 Cámara lenta</button>
+
+    <button id="btnPausa" onclick="togglePausa()">⏸ Pausa</button>
+
+    <button id="btnInicio" onclick="iniciarSimulacion()">▶ INICIAR</button>
+
+    <button id="btnSeguimiento" onclick="toggleSeguimiento()">
+      🎯 Altura AUTO: OFF
+    </button>
+
+    <button onclick="toggleCoords()">📍 Mostrar coords</button>
+
+    <button id="btnReaccion" onclick="calibrarTiempoReaccion()">
+      ⚡ Calibrar retardo
+    </button>
+  </div>
+
+  <div
+    id="panelRetardo"
+    style="
+      position: absolute;
+      top: 90px;
+      left: 15px;
+      width: 220px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: 1px solid #888;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: Arial;
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+      z-index: 1000;
+    "
+  >
+    <b>🎯 Retardo personal</b>
+
+    <hr />
+
+    <table style="width: 100%; color: white; font-size: 14px">
+      <tr>
+        <td>Prueba</td>
+        <td align="right"><span id="rPrueba">0 / 10</span></td>
+      </tr>
+      <tr>
+        <td>Última</td>
+        <td align="right"><span id="rUltima">---</span></td>
+      </tr>
+      <tr>
+        <td>Media</td>
+        <td align="right"><span id="rMedia">---</span></td>
+      </tr>
+    </table>
+    <hr />
+
+    <div
+      id="rEstado"
+      style="
+        color: #7cfc00;
+        font-weight: bold;
+        text-align: center;
+        min-height: 20px;
+      "
+    ></div>
+  </div>
+  <canvas id="canvas"></canvas>
+
+  <div
+    id="ayudaMovil"
+    style="
+      margin: 0px auto;
+      padding: 3px 7px;
+      background: rgba(30, 30, 30, 0.82);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: white;
+      border-radius: 8px;
+      font-size: 10px;
+      line-height: 1.15;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+      max-width: 320px;
+      text-align: left;
+    "
+  >
+    👆 <strong>1 dedo</strong> → mover la mira<br />
+    👆 <strong>Levantar el dedo</strong> → disparar<br />
+    👆👆 <strong>Doble toque</strong> → volver a disparar
+  </div>
+
+  <h3 id="resultado"></h3>
+  <script src="js/simulador.js"></script>
+</html>

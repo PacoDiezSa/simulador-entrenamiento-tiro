@@ -1,0 +1,370 @@
+<!-- 25/07/2026 13:05 -->
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entrenamiento de Tiro Cinegético</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#111111" />
+
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div style="text-align: center; margin: 5px 0">
+        <button
+          id="btnConfiguracion"
+          class="btn-secundario"
+          onclick="toggleConfiguracion()"
+        >
+          ⚙ Mostrar configuración balística
+        </button>
+
+        <button
+          class="btn-secundario"
+          onclick="window.open('Manual_de_uso.pdf', '_blank')"
+        >
+          📘 Manual
+        </button>
+      </div>
+
+      <div id="panelConfiguracion">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <label for="cartucho"><b>Cartucho:</b></label>
+
+          <div id="cartuchoSeleccionado" class="tarjetaCartucho">
+
+            <div id="nombreCartucho">
+                Ningún cartucho seleccionado
+            </div>
+        
+            <div id="resumenCartucho">
+                BC -- · V0 -- · Peso --
+            </div>
+        
+        </div>
+        </div>
+
+        <div style="margin:6px 0 8px 105px;">
+                
+          <button
+          class="btn-principal"
+          onclick="abrirBiblioteca()"
+          style="
+              width:360px;
+              height:42px;
+              font-size:18px;
+              font-weight:bold;
+          "
+      >
+          📚 Seleccionar cartucho
+      </button>     
+      <div style="
+    margin-top:6px;
+    margin-left:92px;
+    font-size:12px;
+    color:#666;
+">
+    Seleccione un cartucho de la biblioteca o cargue uno personalizado.
+</div> 
+        </div>
+      
+        <h2>Configuración balística</h2> 
+        <h3 id="tituloCartucho" style="margin-top: 20px; color: #2c3e50"></h3>
+        <label>BC (G1)</label>
+        <input id="bc" type="number" step="0.001" value="0.422" />
+
+        <label>Factor de calibración:</label>
+        <input type="number" id="factorDrag" value="3000" />
+
+        <label>Velocidad inicial (m/s)</label>
+        <input id="v0" type="number" value="838" />
+
+        <label>Altitud (m)</label>
+        <input id="alt" type="number" value="1000" />
+
+        <label>Zona vital (diámetro en cm)</label>
+        <input id="zona" type="number" value="15" />
+
+        <label>Velocidad del viento (m/s)</label>
+        <input id="viento" type="number" value="4" />
+
+        <label>Ángulo del viento (°)</label>
+        <input id="anguloViento" type="number" value="90" min="0" max="360" />
+
+        <label>Velocidad del animal (m/s)</label>
+        <input id="velAnimal" type="number" value="8" />
+
+        <label>Pendiente terreno (°)</label>
+        <input id="pendiente" type="number" value="0" />
+
+        <label>Ángulo desplazamiento del animal (°)</label>
+        <input id="anguloAnimal" type="number" value="0" />
+
+        <label>Sistema de torreta</label>
+        <select id="sistema">
+          <option value="mrad">MRAD</option>
+          <option value="moa">MOA</option>
+        </select>
+
+        <label>Valor por click</label>
+        <input id="valorClick" type="number" step="0.01" value="0.1" />
+
+        <label>Peso del proyectil (grains)</label>
+        <input id="peso" type="number" value="180" />
+
+        <label>Segundo cero deseado (m)</label>
+        <input id="ceroDeseado" type="number" value="200" />
+
+        <div class="panel-perfiles">
+          <h3>Gestión de perfiles</h3>
+
+          <div class="perfil-linea">
+            <select id="selectorPerfil"></select>
+
+            <button class="btn-secundario" onclick="guardarPerfil()">
+              Guardar
+            </button>
+
+            <button class="btn-secundario" onclick="cargarPerfil()">
+              Cargar
+            </button>
+
+            <button class="btn-peligro" onclick="eliminarPerfil()">
+              Eliminar
+            </button>
+          </div>
+        </div>
+
+        <button class="btn-principal" onclick="calcular()">
+          🔄 Actualizar cálculo
+        </button>
+
+        <div class="result" id="resultado"></div>
+
+        <button class="btn-restablecer" onclick="restablecerValores()">
+          Restablecer valores iniciales
+        </button>
+      </div>
+    </div>
+
+    <div id="panelTabla">
+      <div class="tabla-contenedor">
+        <table id="tabla">
+          <thead>
+            <tr>
+              <th>Dist. hor (m)</th>
+              <th>Dist. geométrica (m)</th>
+              <th>Vel (m/s)</th>
+              <th>Energía (J)</th>
+              <th>Caída (cm)</th>
+              <th>Deriva (cm)</th>
+              <th>Adelanto de disparo (cm)</th>
+              <th>Adelanto final</th>
+              <th>Tiempo (s)</th>
+              <th>Clicks ↑ (0.1 mrad)</th>
+              <th>Clicks → (0.1 mrad)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin: 10px 0">
+      <label
+        for="distanciaEntrenamiento"
+        style="font-weight: bold; margin-right: 8px"
+      >
+        Distancia de entrenamiento:
+      </label>
+
+      <input
+        id="distanciaEntrenamiento"
+        type="number"
+        value="200"
+        min="0"
+        max="300"
+        step="1"
+        style="width: 80px; text-align: center; font-size: 16px; padding: 4px"
+      />
+
+      <br />
+
+      <div id="resumenSimulacion">
+        <h3>Disparo seleccionado</h3>
+        <div class="resumen-cartucho">
+          <div class="resumen-etiqueta">Cartucho</div>
+          <div id="rCartucho" class="resumen-valor"></div>
+        </div>
+
+        <div class="resumen-grid">
+          <div class="resumen-etiqueta">Distancia</div>
+          <div id="rDistancia" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Puesta a cero</div>
+          <div id="rCero" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Vel. animal</div>
+          <div id="rVelAnimal" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Vel. viento</div>
+          <div id="rViento" class="resumen-valor"></div>
+        </div>
+
+        <div class="resumen-balistica">
+          <div class="resumen-etiqueta">El jabalí avanzará</div>
+          <div id="rAdelanto" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Caída</div>
+          <div id="rCaida" class="resumen-valor"></div>
+        </div>
+
+        <div class="resumen-grid">
+          <div class="resumen-etiqueta">Tiempo vuelo</div>
+          <div id="rTiempo" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Velocidad</div>
+          <div id="rVelocidad" class="resumen-valor"></div>
+        </div>
+
+        <div class="resumen-grid">
+          <div class="resumen-etiqueta">Zona vital</div>
+          <div id="rZona" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Sistema</div>
+          <div id="rSistema" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Energía</div>
+          <div id="rEnergia" class="resumen-valor"></div>
+
+          <div class="resumen-etiqueta">Retardo personal</div>
+          <div id="rRetardo" class="resumen-valor"></div>
+        </div>
+      </div>
+
+      <br />
+    </div>
+
+    <div style="text-align: center; margin: 6px 0 10px 0">
+      <input
+        type="checkbox"
+        id="usarRetardo"
+        onchange="toggleRetardo()"
+        style="vertical-align: middle"
+      />
+
+      <span style="vertical-align: middle"> Aplicar retardo personal </span>
+    </div>
+
+    <div style="text-align: center; margin: 8px 0">
+      <button id="btnTabla" class="btn-secundario" onclick="toggleTabla()">
+        📋 Mostrar tabla balística
+      </button>
+    </div>
+
+    <div class="bloque-simulador">
+      <div class="titulo-simulador">SIMULADOR DE ENTRENAMIENTO</div>
+
+      <button id="btnSimulador" onclick="abrirSimulador()">
+        SIMULAR DISPARO
+      </button>
+    </div>
+
+    <hr style="margin-top: 40px" />
+
+    <footer
+      style="
+        margin-top: 40px;
+        padding: 20px 15px;
+        background: #f4f6f8;
+        border-top: 1px solid #ddd;
+        text-align: center;
+        font-size: 13px;
+        color: #555;
+      "
+    >
+      © 2026 F. Díez — Simulador de Entrenamiento Balístico
+      <div id="versionApp" style="margin-top: 6px; font-weight: 600"></div>
+    </footer>
+    <script src="js/utilidades.js"></script>
+    <script src="js/biblioteca.js"></script>
+    <script src="js/calculadora.js"></script>
+    <script src="js/perfiles.js"></script>
+    <script src="js/version.js"></script>
+    <script src="js/inicializacion.js"></script>
+    <script src="js/serviceWorker.js"></script>
+
+    <script>
+      // ====================================================
+      // VARIABLES GLOBALES DE LA CALCULADORA
+      // ====================================================
+
+      let velocidadAnimalPx = 0;
+      let inicioTiempo = null;
+      let animalX = 0;
+    </script>
+
+    <div id="panelBiblioteca" class="panelBiblioteca" style="display: none">
+      <div class="cabeceraBiblioteca">
+        <span>📚 Biblioteca de cartuchos</span>
+
+        <button onclick="cerrarBiblioteca()">✖</button>
+      </div>
+
+      <div class="contenidoBiblioteca">
+
+        <label for="cmbFabricante"><b>Fabricante</b></label><br>
+    
+        <select id="cmbFabricante" style="width:350px;height:32px;">
+    
+            <option>Seleccione...</option>
+    
+        </select>
+        <br><br>
+
+        <label for="cmbCalibre"><b>Calibre</b></label><br><br>
+
+        <select id="cmbCalibre" style="width:350px;height:32px;">
+            <option>Seleccione un fabricante...</option>
+        </select>
+        <br><br>
+
+        <label for="cmbMunicion"><b>Munición</b></label><br><br>
+        
+        <select id="cmbMunicion" style="width:500px;height:32px;">
+            <option>Seleccione un calibre...</option>
+        </select>
+
+        <br><br>
+
+        <div id="datosMunicion"
+             style="
+                border:1px solid #ccc;
+                border-radius:8px;
+                padding:12px;
+                background:#f8f8f8;
+                width:520px;
+                display:none;
+             ">
+        
+            <b>Datos del cartucho</b><br><br>
+        
+            <br>
+            BC (G1): <span id="dBC">-</span><br>
+            V0: <span id="dV0">-</span> m/s<br>
+            Peso: <span id="dPeso">-</span> gr<br>
+            Factor: <span id="dFactor">-</span>
+        
+        </div>
+        <div style="text-align:center; margin-top:15px;">
+          <button id="btnCargarCartucho"
+                  onclick="cargarCartuchoSeleccionado()">
+              ✔ Cargar este cartucho
+          </button>
+      </div>
+    </div>
+  </body>
+</html>
