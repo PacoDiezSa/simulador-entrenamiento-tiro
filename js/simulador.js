@@ -57,10 +57,10 @@ const MODO_CALIBRACION = false;
 const DESPLAZAMIENTO_FONDO_Y = -20;
 // Ajuste visual para alinear el centro de la cruz con la punta del cursor.
 // Puede variar ligeramente según el navegador o la escala del canvas.const AJUSTE_CURSOR_X = -40;
-const AJUSTE_CURSOR_Y = 20;
+const AJUSTE_CURSOR_Y = 80;
 const AJUSTE_CURSOR_X = 20;
 const AJUSTE_ZONA_VITAL_X = 0;
-const AJUSTE_ZONA_VITAL_Y = 10;
+const AJUSTE_ZONA_VITAL_Y = 100;
 // ===== Calibración tiempo de reacción =====
 let modoReaccion = false;
 let factorVelocidadAnterior = 1;
