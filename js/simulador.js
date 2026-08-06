@@ -397,7 +397,10 @@ canvas.addEventListener("pointermove", function (e) {
     if (e.pointerType === "touch") {
       crossY = Math.max(0, e.clientY - rect.top - offsetMovil);
     } else {
-      crossY = e.clientY - rect.top + AJUSTE_CURSOR_Y;
+      crossY = Math.max(
+        0,
+        e.clientY - rect.top - offsetMovil + AJUSTE_CURSOR_Y,
+      );
     }
   }
 });
