@@ -395,12 +395,12 @@ canvas.addEventListener("pointermove", function (e) {
 
   if (!ayudaSeguimiento) {
     if (e.pointerType === "touch") {
-      crossY = Math.max(0, e.clientY - rect.top - offsetMovil);
-    } else {
       crossY = Math.max(
         0,
         e.clientY - rect.top - offsetMovil + AJUSTE_CURSOR_Y,
       );
+    } else {
+      crossY = e.clientY - rect.top + AJUSTE_CURSOR_Y;
     }
   }
 });
