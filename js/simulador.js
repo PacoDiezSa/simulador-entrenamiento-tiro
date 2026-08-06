@@ -58,7 +58,7 @@ const DESPLAZAMIENTO_FONDO_Y = -20;
 // Ajuste visual para alinear el centro de la cruz con la punta del cursor.
 // Puede variar ligeramente según el navegador o la escala del canvas.const AJUSTE_CURSOR_X = -40;
 const AJUSTE_CURSOR_Y = 18;
-const AJUSTE_CURSOR_X = -20;
+const AJUSTE_CURSOR_X = -10;
 const AJUSTE_ZONA_VITAL_X = 0;
 const AJUSTE_ZONA_VITAL_Y = 100;
 // ===== Calibración tiempo de reacción =====
@@ -135,7 +135,7 @@ let instantePausa = 0;
 
 let crossX = 50;
 let crossY = 0;
-
+let esTouch = false;
 let mostrarCoords = false;
 let ayudaSeguimiento = false;
 let anguloCaida = 0;
@@ -390,15 +390,13 @@ const offsetMovil = 80;
 // ===== MOVIMIENTO (ratón + dedo) =====
 canvas.addEventListener("pointermove", function (e) {
   const rect = canvas.getBoundingClientRect();
+  esTouch = e.pointerType === "touch";
 
   crossX = e.clientX - rect.left + AJUSTE_CURSOR_X;
 
   if (!ayudaSeguimiento) {
     if (e.pointerType === "touch") {
-      crossY = Math.max(
-        0,
-        e.clientY - rect.top - offsetMovil + AJUSTE_CURSOR_Y,
-      );
+      crossY = Math.max(0, e.clientY - rect.top - offsetMovil);
     } else {
       crossY = e.clientY - rect.top + AJUSTE_CURSOR_Y;
     }
@@ -411,20 +409,14 @@ let punterosActivos = new Set();
 // ===== POINTER DOWN =====
 canvas.addEventListener("pointerdown", function (e) {
   const rect = canvas.getBoundingClientRect();
-
+  esTouch = e.pointerType === "touch";
   crossX = e.clientX - rect.left + AJUSTE_CURSOR_X;
 
   if (!ayudaSeguimiento) {
     if (e.pointerType === "touch") {
-      crossY = Math.max(
-        0,
-        e.clientY - rect.top - offsetMovil + AJUSTE_CURSOR_Y,
-      );
+      crossY = Math.max(0, e.clientY - rect.top - offsetMovil);
     } else {
-      crossY = Math.max(
-        0,
-        e.clientY - rect.top - offsetMovil + AJUSTE_CURSOR_Y,
-      );
+      crossY = e.clientY - rect.top + AJUSTE_CURSOR_Y;
     }
   }
   punterosActivos.add(e.pointerId);
@@ -565,6 +557,7 @@ function animarDisparo(timestamp) {
   requestAnimationFrame(animarDisparo);
 }
 function dibujarVisor() {
+  const yVisor = esTouch ? crossY + 60 : crossY;
   const TAM = 40;
 
   // Contorno negro
@@ -572,10 +565,10 @@ function dibujarVisor() {
   ctx.lineWidth = 4;
 
   ctx.beginPath();
-  ctx.moveTo(crossX - TAM, crossY);
-  ctx.lineTo(crossX + TAM, crossY);
-  ctx.moveTo(crossX, crossY - TAM);
-  ctx.lineTo(crossX, crossY + TAM);
+  ctx.moveTo(crossX - TAM, yVisor);
+  ctx.lineTo(crossX + TAM, yVisor);
+  ctx.moveTo(crossX, yVisor - TAM);
+  ctx.lineTo(crossX, yVisor + TAM);
   ctx.stroke();
 
   // Cruz blanca
@@ -583,8 +576,8 @@ function dibujarVisor() {
   ctx.lineWidth = 2;
 
   ctx.beginPath();
-  ctx.moveTo(crossX - TAM, crossY);
-  ctx.lineTo(crossX + TAM, crossY);
+  ctx.moveTo(crossX - TAM, yVisor);
+  ctx.lineTo(crossX + TAM, yVisor);
   ctx.moveTo(crossX, crossY - TAM);
   ctx.lineTo(crossX, crossY + TAM);
   ctx.stroke();
