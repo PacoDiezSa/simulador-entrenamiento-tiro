@@ -433,7 +433,8 @@ function moverCursorMovil(e) {
   crossX = (e.clientX - rect.left) * escalaX + AJUSTE_MOVIL_X;
 
   if (!ayudaSeguimiento) {
-    crossY = (e.clientY - rect.top) * escalaY + AJUSTE_MOVIL_Y;
+    // crossY = (e.clientY - rect.top) * escalaY + AJUSTE_MOVIL_Y;
+    crossY = 100;
   }
   console.log("MOVIL", crossX, crossY);
 }
