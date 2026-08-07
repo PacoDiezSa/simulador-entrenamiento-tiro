@@ -162,14 +162,38 @@ function calculoVelocidadRealSimulador() {
   velocidadAnimalPx = configuracion.velocidadAnimal * pxPorMetro;
 }
 
+// window.onload = function () {
+//   calculoVelocidadRealSimulador();
+//   actualizarEtiquetaVelocidad();
+//   actualizarPanel();
+
+//   crossY = canvas.height / 2;
+//   requestAnimationFrame(animarDisparo);
+// };
+
 window.onload = function () {
   calculoVelocidadRealSimulador();
   actualizarEtiquetaVelocidad();
   actualizarPanel();
 
   crossY = canvas.height / 2;
+
+  const r = canvas.getBoundingClientRect();
+
+  alert(
+    "Canvas: " +
+      canvas.width +
+      " x " +
+      canvas.height +
+      "\nRect: " +
+      Math.round(r.width) +
+      " x " +
+      Math.round(r.height),
+  );
+
   requestAnimationFrame(animarDisparo);
 };
+
 // ==================================================
 // CÁLCULO DE LA VELOCIDAD REAL DEL SIMULADOR
 // ==================================================
@@ -391,7 +415,16 @@ const offsetMovil = 120;
 // ===== MOVIMIENTO (ratón + dedo) =====
 canvas.addEventListener("pointermove", function (e) {
   const rect = canvas.getBoundingClientRect();
-
+  if (e.pointerType === "touch") {
+    console.log(
+      "clientY =",
+      e.clientY,
+      " rect.top =",
+      rect.top,
+      " y =",
+      e.clientY - rect.top,
+    );
+  }
   esTouch = e.pointerType === "touch";
 
   // Conversión de coordenadas de pantalla a coordenadas reales del canvas
@@ -580,6 +613,9 @@ function animarDisparo(timestamp) {
 }
 function dibujarVisor() {
   const TAM = 40;
+  ctx.fillStyle = "red";
+  ctx.font = "20px Arial";
+  ctx.fillText(Math.round(crossY), 20, 30);
 
   // Contorno negro
   ctx.strokeStyle = "black";
