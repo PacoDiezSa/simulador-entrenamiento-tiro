@@ -575,13 +575,15 @@ function dibujarVisor() {
   ctx.strokeStyle = ayudaSeguimiento ? "#00FFFF" : "white";
   ctx.lineWidth = 2;
 
+  // Cruz blanca
   ctx.beginPath();
   ctx.moveTo(crossX - TAM, yVisor);
   ctx.lineTo(crossX + TAM, yVisor);
-  ctx.moveTo(crossX, crossY - TAM);
-  ctx.lineTo(crossX, crossY + TAM);
-  ctx.stroke();
 
+  ctx.moveTo(crossX, yVisor - TAM);
+  ctx.lineTo(crossX, yVisor + TAM);
+
+  ctx.stroke();
   // Línea de referencia para calibración
   if (modoReaccion) {
     ctx.strokeStyle = "red";
