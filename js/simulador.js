@@ -390,18 +390,24 @@ const offsetMovil = 80;
 // ===== MOVIMIENTO (ratón + dedo) =====
 canvas.addEventListener("pointermove", function (e) {
   const rect = canvas.getBoundingClientRect();
+
   esTouch = e.pointerType === "touch";
 
-  crossX = e.clientX - rect.left + AJUSTE_CURSOR_X;
+  // Conversión de coordenadas de pantalla a coordenadas reales del canvas
+  const escalaX = canvas.width / rect.width;
+  const escalaY = canvas.height / rect.height;
+
+  crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
 
   if (!ayudaSeguimiento) {
     if (e.pointerType === "touch") {
-      crossY = Math.max(0, e.clientY - rect.top - offsetMovil);
+      crossY = Math.max(0, (e.clientY - rect.top) * escalaY - offsetMovil);
     } else {
-      crossY = e.clientY - rect.top + AJUSTE_CURSOR_Y;
+      crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
     }
   }
 });
+
 // ===== CONTROL DE DISPARO =====
 
 let punterosActivos = new Set();
@@ -557,7 +563,6 @@ function animarDisparo(timestamp) {
   requestAnimationFrame(animarDisparo);
 }
 function dibujarVisor() {
-  const yVisor = esTouch ? crossY + 60 : crossY;
   const TAM = 40;
 
   // Contorno negro
@@ -565,25 +570,23 @@ function dibujarVisor() {
   ctx.lineWidth = 4;
 
   ctx.beginPath();
-  ctx.moveTo(crossX - TAM, yVisor);
-  ctx.lineTo(crossX + TAM, yVisor);
-  ctx.moveTo(crossX, yVisor - TAM);
-  ctx.lineTo(crossX, yVisor + TAM);
+  ctx.moveTo(crossX - TAM, crossY);
+  ctx.lineTo(crossX + TAM, crossY);
+  ctx.moveTo(crossX, crossY - TAM);
+  ctx.lineTo(crossX, crossY + TAM);
   ctx.stroke();
 
   // Cruz blanca
   ctx.strokeStyle = ayudaSeguimiento ? "#00FFFF" : "white";
   ctx.lineWidth = 2;
 
-  // Cruz blanca
   ctx.beginPath();
-  ctx.moveTo(crossX - TAM, yVisor);
-  ctx.lineTo(crossX + TAM, yVisor);
-
-  ctx.moveTo(crossX, yVisor - TAM);
-  ctx.lineTo(crossX, yVisor + TAM);
-
+  ctx.moveTo(crossX - TAM, crossY);
+  ctx.lineTo(crossX + TAM, crossY);
+  ctx.moveTo(crossX, crossY - TAM);
+  ctx.lineTo(crossX, crossY + TAM);
   ctx.stroke();
+
   // Línea de referencia para calibración
   if (modoReaccion) {
     ctx.strokeStyle = "red";
@@ -595,6 +598,7 @@ function dibujarVisor() {
     ctx.stroke();
   }
 }
+
 function dibujarCoordenadas() {
   if (!mostrarCoords) return;
 
