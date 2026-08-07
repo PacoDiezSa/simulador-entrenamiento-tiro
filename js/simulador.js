@@ -1,7 +1,6 @@
 // ==================================================
 // DATOS DEL SIMULADOR
 // ==================================================
-alert("SIMULADOR JS 07-08-2026 11:30");
 let datosSimulador = null;
 
 function cargarDatosSimulador() {
@@ -178,19 +177,6 @@ window.onload = function () {
   actualizarPanel();
 
   crossY = canvas.height / 2;
-
-  const r = canvas.getBoundingClientRect();
-
-  alert(
-    "Canvas: " +
-      canvas.width +
-      " x " +
-      canvas.height +
-      "\nRect: " +
-      Math.round(r.width) +
-      " x " +
-      Math.round(r.height),
-  );
 
   requestAnimationFrame(animarDisparo);
 };
@@ -412,41 +398,91 @@ function dibujarEscalaTerreno(centroZonY) {
 // Desplazamiento de la cruz en móviles (para que el dedo no la tape)
 const offsetMovil = 120;
 
-// ===== MOVIMIENTO (ratón + dedo) =====
-// ===== MOVIMIENTO (ratón + dedo) =====
-canvas.addEventListener("pointermove", function (e) {
+// ==================================================
+// MOVIMIENTO DEL CURSOR EN PC
+// ==================================================
+// ==================================================
+// MOVIMIENTO DEL CURSOR EN PC
+// ==================================================
+function moverCursorPC(e) {
   const rect = canvas.getBoundingClientRect();
-  if (e.pointerType === "touch") {
-    console.log(
-      "clientY =",
-      e.clientY,
-      " rect.top =",
-      rect.top,
-      " y =",
-      e.clientY - rect.top,
-    );
-  }
-  esTouch = e.pointerType === "touch";
 
-  // Conversión de coordenadas de pantalla a coordenadas reales del canvas
   const escalaX = canvas.width / rect.width;
   const escalaY = canvas.height / rect.height;
 
-  if (e.pointerType === "touch") {
-    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+  crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
 
-    if (!ayudaSeguimiento) {
-      crossY = Math.max(
-        0,
-        (e.clientY - rect.top) * escalaY - offsetMovil + AJUSTE_CURSOR_Y,
-      );
-    }
+  if (!ayudaSeguimiento) {
+    crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
+  }
+}
+
+// ==================================================
+// MOVIMIENTO DEL CURSOR EN MÓVIL
+// ==================================================
+
+const AJUSTE_MOVIL_X = 0;
+const AJUSTE_MOVIL_Y = 0;
+
+function moverCursorMovil(e) {
+  const rect = canvas.getBoundingClientRect();
+
+  const escalaX = canvas.width / rect.width;
+  const escalaY = canvas.height / rect.height;
+
+  crossX = (e.clientX - rect.left) * escalaX + AJUSTE_MOVIL_X;
+
+  if (!ayudaSeguimiento) {
+    crossY = (e.clientY - rect.top) * escalaY + AJUSTE_MOVIL_Y;
+  }
+}
+
+// ===== MOVIMIENTO (ratón + dedo) =====
+// canvas.addEventListener("pointermove", function (e) {
+//   const rect = canvas.getBoundingClientRect();
+//   if (e.pointerType === "touch") {
+//     console.log(
+//       "clientY =",
+//       e.clientY,
+//       " rect.top =",
+//       rect.top,
+//       " y =",
+//       e.clientY - rect.top,
+//     );
+//   }
+
+//   esTouch = e.pointerType === "touch";
+
+//   // Conversión de coordenadas de pantalla a coordenadas reales del canvas
+//   const escalaX = canvas.width / rect.width;
+//   const escalaY = canvas.height / rect.height;
+
+//   if (e.pointerType === "touch") {
+//     crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+
+//     if (!ayudaSeguimiento) {
+//       crossY = Math.max(
+//         0,
+//         (e.clientY - rect.top) * escalaY - offsetMovil + AJUSTE_CURSOR_Y,
+//       );
+//     }
+//   } else {
+//     crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+
+//     if (!ayudaSeguimiento) {
+//       crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
+//     }
+//   }
+// });
+
+// ===== MOVIMIENTO (ratón + dedo) =====
+canvas.addEventListener("pointermove", function (e) {
+  esTouch = e.pointerType === "touch";
+
+  if (esTouch) {
+    moverCursorMovil(e);
   } else {
-    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
-
-    if (!ayudaSeguimiento) {
-      crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
-    }
+    moverCursorPC(e);
   }
 });
 
@@ -455,45 +491,70 @@ canvas.addEventListener("pointermove", function (e) {
 let punterosActivos = new Set();
 
 // ===== POINTER DOWN =====
+// canvas.addEventListener("pointerdown", function (e) {
+//   const rect = canvas.getBoundingClientRect();
+
+//   esTouch = e.pointerType === "touch";
+
+//   const escalaX = canvas.width / rect.width;
+//   const escalaY = canvas.height / rect.height;
+
+//   if (e.pointerType === "touch") {
+//     crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+
+//     if (!ayudaSeguimiento) {
+//       crossY = Math.max(
+//         0,
+//         (e.clientY - rect.top) * escalaY - offsetMovil + AJUSTE_CURSOR_Y,
+//       );
+//     }
+//   } else {
+//     crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+
+//     if (!ayudaSeguimiento) {
+//       crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
+//     }
+//   }
+
+//   punterosActivos.add(e.pointerId);
+
+//   // PC
+//   if (e.pointerType === "mouse") {
+//     if (e.button === 0) disparar();
+//     if (e.button === 2) corregirDisparo();
+//   }
+
+//   // Móvil
+//   if (e.pointerType === "touch") {
+//     e.preventDefault();
+//   }
+// });
+
 // ===== POINTER DOWN =====
 canvas.addEventListener("pointerdown", function (e) {
-  const rect = canvas.getBoundingClientRect();
-
   esTouch = e.pointerType === "touch";
 
-  const escalaX = canvas.width / rect.width;
-  const escalaY = canvas.height / rect.height;
-
-  if (e.pointerType === "touch") {
-    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
-
-    if (!ayudaSeguimiento) {
-      crossY = Math.max(
-        0,
-        (e.clientY - rect.top) * escalaY - offsetMovil + AJUSTE_CURSOR_Y,
-      );
-    }
+  if (esTouch) {
+    moverCursorMovil(e);
   } else {
-    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
-
-    if (!ayudaSeguimiento) {
-      crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
-    }
+    moverCursorPC(e);
   }
 
   punterosActivos.add(e.pointerId);
 
-  // PC
+  // ===== PC =====
   if (e.pointerType === "mouse") {
     if (e.button === 0) disparar();
+
     if (e.button === 2) corregirDisparo();
   }
 
-  // Móvil
+  // ===== MÓVIL =====
   if (e.pointerType === "touch") {
     e.preventDefault();
   }
 });
+
 // ===== DISPARAR AL SOLTAR EN MÓVIL =====
 canvas.addEventListener("pointerup", function (e) {
   punterosActivos.delete(e.pointerId);
@@ -569,13 +630,19 @@ function animarDisparo(timestamp) {
 
   dibujarEscalaTerreno(centroZonY);
 
-  ctx.strokeStyle = "lime";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(0, centro.y);
-  ctx.lineTo(canvas.width, centro.y);
-  ctx.stroke();
+  // ==========================
+  // AYUDA AL SEGUIMIENTO
+  // ==========================
+  if (ayudaSeguimiento) {
+    crossY = centro.y + caidaPx;
 
+    ctx.strokeStyle = "lime";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, centro.y);
+    ctx.lineTo(canvas.width, centro.y);
+    ctx.stroke();
+  }
   if (modoReaccion) {
     // Línea roja fija en el centro de la pantalla
     ctx.strokeStyle = "red";
@@ -586,13 +653,13 @@ function animarDisparo(timestamp) {
     ctx.lineTo(canvas.width / 2, canvas.height);
     ctx.stroke();
 
-    // Línea verde sobre el centro de la zona vital
-    ctx.strokeStyle = "lime";
+    // // Línea verde sobre el centro de la zona vital
+    // ctx.strokeStyle = "lime";
 
-    ctx.beginPath();
-    ctx.moveTo(centro.x, 0);
-    ctx.lineTo(centro.x, canvas.height);
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(centro.x, 0);
+    // ctx.lineTo(centro.x, canvas.height);
+    // ctx.stroke();
   }
   // -----------------------------------------
   // Detectar el paso por la línea roja
@@ -614,9 +681,9 @@ function animarDisparo(timestamp) {
 }
 function dibujarVisor() {
   const TAM = 40;
-  ctx.fillStyle = "red";
-  ctx.font = "20px Arial";
-  ctx.fillText(Math.round(crossY), 20, 30);
+  // ctx.fillStyle = "red";
+  // ctx.font = "20px Arial";
+  // ctx.fillText(Math.round(crossY), 20, 30);
 
   // Contorno negro
   ctx.strokeStyle = "black";
