@@ -385,7 +385,7 @@ function dibujarEscalaTerreno(centroZonY) {
   ctx.restore();
 }
 // Desplazamiento de la cruz en móviles (para que el dedo no la tape)
-const offsetMovil = 80;
+const offsetMovil = 120;
 
 // ===== MOVIMIENTO (ratón + dedo) =====
 canvas.addEventListener("pointermove", function (e) {
