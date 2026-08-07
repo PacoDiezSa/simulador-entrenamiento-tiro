@@ -422,7 +422,7 @@ function moverCursorPC(e) {
 // ==================================================
 
 const AJUSTE_MOVIL_X = 0;
-const AJUSTE_MOVIL_Y = 0;
+const AJUSTE_MOVIL_Y = -80;
 
 function moverCursorMovil(e) {
   const rect = canvas.getBoundingClientRect();
