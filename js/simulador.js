@@ -435,6 +435,7 @@ function moverCursorMovil(e) {
   if (!ayudaSeguimiento) {
     crossY = (e.clientY - rect.top) * escalaY + AJUSTE_MOVIL_Y;
   }
+  console.log("MOVIL", crossX, crossY);
 }
 
 // ===== MOVIMIENTO (ratón + dedo) =====
