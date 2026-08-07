@@ -390,7 +390,9 @@ const offsetMovil = 80;
 // ===== MOVIMIENTO (ratón + dedo) =====
 canvas.addEventListener("pointermove", function (e) {
   const rect = canvas.getBoundingClientRect();
-
+  console.log("canvas:", canvas.width, canvas.height);
+  console.log("rect:", rect.width, rect.height);
+  console.log("touch:", e.clientX, e.clientY);
   esTouch = e.pointerType === "touch";
 
   // Conversión de coordenadas de pantalla a coordenadas reales del canvas
@@ -415,30 +417,29 @@ let punterosActivos = new Set();
 // ===== POINTER DOWN =====
 canvas.addEventListener("pointerdown", function (e) {
   const rect = canvas.getBoundingClientRect();
+
   esTouch = e.pointerType === "touch";
-  crossX = e.clientX - rect.left + AJUSTE_CURSOR_X;
+
+  const escalaX = canvas.width / rect.width;
+  const escalaY = canvas.height / rect.height;
+
+  crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
 
   if (!ayudaSeguimiento) {
     if (e.pointerType === "touch") {
-      crossY = Math.max(0, e.clientY - rect.top - offsetMovil);
+      crossY = Math.max(0, (e.clientY - rect.top) * escalaY - offsetMovil);
     } else {
-      crossY = e.clientY - rect.top + AJUSTE_CURSOR_Y;
+      crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
     }
   }
+
   punterosActivos.add(e.pointerId);
 
-  // PC
   if (e.pointerType === "mouse") {
-    if (e.button === 0) {
-      disparar();
-    }
-
-    if (e.button === 2) {
-      corregirDisparo();
-    }
+    if (e.button === 0) disparar();
+    if (e.button === 2) corregirDisparo();
   }
 
-  // Móvil
   if (e.pointerType === "touch") {
     e.preventDefault();
   }
