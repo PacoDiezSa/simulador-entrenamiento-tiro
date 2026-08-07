@@ -1,6 +1,7 @@
 // ==================================================
 // DATOS DEL SIMULADOR
 // ==================================================
+alert("SIMULADOR JS 07-08-2026 11:30");
 let datosSimulador = null;
 
 function cargarDatosSimulador() {
