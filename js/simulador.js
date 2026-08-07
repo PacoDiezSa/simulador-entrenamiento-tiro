@@ -421,7 +421,7 @@ function moverCursorPC(e) {
 // MOVIMIENTO DEL CURSOR EN MÓVIL
 // ==================================================
 
-const AJUSTE_MOVIL_X = -80;
+const AJUSTE_MOVIL_X = -150;
 const AJUSTE_MOVIL_Y = 80;
 console.log("AJUSTE =", AJUSTE_MOVIL_Y);
 
