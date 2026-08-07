@@ -388,23 +388,29 @@ function dibujarEscalaTerreno(centroZonY) {
 const offsetMovil = 120;
 
 // ===== MOVIMIENTO (ratón + dedo) =====
+// ===== MOVIMIENTO (ratón + dedo) =====
 canvas.addEventListener("pointermove", function (e) {
   const rect = canvas.getBoundingClientRect();
-  console.log("canvas:", canvas.width, canvas.height);
-  console.log("rect:", rect.width, rect.height);
-  console.log("touch:", e.clientX, e.clientY);
+
   esTouch = e.pointerType === "touch";
 
   // Conversión de coordenadas de pantalla a coordenadas reales del canvas
   const escalaX = canvas.width / rect.width;
   const escalaY = canvas.height / rect.height;
 
-  crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+  if (e.pointerType === "touch") {
+    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
 
-  if (!ayudaSeguimiento) {
-    if (e.pointerType === "touch") {
-      crossY = Math.max(0, (e.clientY - rect.top) * escalaY - offsetMovil);
-    } else {
+    if (!ayudaSeguimiento) {
+      crossY = Math.max(
+        0,
+        (e.clientY - rect.top) * escalaY - offsetMovil + AJUSTE_CURSOR_Y,
+      );
+    }
+  } else {
+    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+
+    if (!ayudaSeguimiento) {
       crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
     }
   }
@@ -415,6 +421,7 @@ canvas.addEventListener("pointermove", function (e) {
 let punterosActivos = new Set();
 
 // ===== POINTER DOWN =====
+// ===== POINTER DOWN =====
 canvas.addEventListener("pointerdown", function (e) {
   const rect = canvas.getBoundingClientRect();
 
@@ -423,28 +430,36 @@ canvas.addEventListener("pointerdown", function (e) {
   const escalaX = canvas.width / rect.width;
   const escalaY = canvas.height / rect.height;
 
-  crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+  if (e.pointerType === "touch") {
+    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
 
-  if (!ayudaSeguimiento) {
-    if (e.pointerType === "touch") {
-      crossY = Math.max(0, (e.clientY - rect.top) * escalaY - offsetMovil);
-    } else {
+    if (!ayudaSeguimiento) {
+      crossY = Math.max(
+        0,
+        (e.clientY - rect.top) * escalaY - offsetMovil + AJUSTE_CURSOR_Y,
+      );
+    }
+  } else {
+    crossX = (e.clientX - rect.left) * escalaX + AJUSTE_CURSOR_X;
+
+    if (!ayudaSeguimiento) {
       crossY = (e.clientY - rect.top) * escalaY + AJUSTE_CURSOR_Y;
     }
   }
 
   punterosActivos.add(e.pointerId);
 
+  // PC
   if (e.pointerType === "mouse") {
     if (e.button === 0) disparar();
     if (e.button === 2) corregirDisparo();
   }
 
+  // Móvil
   if (e.pointerType === "touch") {
     e.preventDefault();
   }
 });
-
 // ===== DISPARAR AL SOLTAR EN MÓVIL =====
 canvas.addEventListener("pointerup", function (e) {
   punterosActivos.delete(e.pointerId);
