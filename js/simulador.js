@@ -973,7 +973,32 @@ function disparar() {
     // (una de las cuatro esquinas)
     estadoImpacto = "rozando";
   }
+
+  // ==================================================
+  // SIGUIENTE PRUEBA AUTOMÁTICA
+  // ==================================================
+  if (modoReaccion && numeroPrueba < 10) {
+    setTimeout(() => {
+      if (!modoReaccion) return;
+
+      estadoImpacto = null;
+      balaX = null;
+      balaY = null;
+
+      cayendo = false;
+      jabaliAbatido = false;
+      anguloCaida = 0;
+
+      referenciaTomada = false;
+      esperandoDisparo = false;
+
+      animando = false;
+
+      iniciarSimulacion();
+    }, 500);
+  }
 }
+
 function corregirDisparo() {
   anguloCaida = 0;
   cayendo = false;
